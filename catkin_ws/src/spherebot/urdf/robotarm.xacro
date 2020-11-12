@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<robot>
+
+  <!-- Aluminium wheel -->
+  <link name="arm_wheel">
+    <inertial>
+      <mass value="9.1891585"></mass>
+      <inertia ixx="0.2374" ixy="0" ixz="0" iyy="0.1034" iyz="0" izz="0.2374" />
+    </inertial>
+    <collision name="arm_wheel_collision">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.25"></cylinder></geometry>
+    </collision>
+    <visual name="arm_wheel_visual">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.25"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <joint name="arm_wheel_joint" type="revolute">
+    <child link="arm_wheel"></child>
+    <parent link="spherebot_torso"></parent>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000.0" lower="-0.7854" upper="0.7854" velocity="0.001"></limit>
+    <dynamics damping="3.0" friction="3.0"></dynamics>
+  </joint>
+
+  <transmission name="arm_wheel_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_wheel_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_wheel_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Aluminium forearm shaft -->
+  <link name="arm_forearm">
+    <inertial>
+      <mass value="1.22522"></mass>
+      <inertia ixx="0.000428827" ixy="0" ixz="0" iyy="0.051326555" iyz="0" izz="0.051326555" />
+    </inertial>
+    <collision name="arm_forearm_collision">
+      <origin rpy="0 1.5708 0" xyz="0.025 0 0"></origin> 
+      <geometry><cylinder length="0.5" radius="0.02"></cylinder></geometry>
+    </collision>
+    <visual name="arm_forearm_visual">
+      <origin rpy="0 1.5708 0" xyz="0.025 0 0"></origin> 
+      <geometry><cylinder length="0.5" radius="0.02"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <joint name="arm_forearm_joint" type="prismatic">
+    <child link="arm_forearm"></child>
+    <parent link="arm_wheel"></parent>
+    <axis rpy="0 0 0" xyz="1 0 0"></axis>
+    <limit effort="10000.0" lower="0.0" upper="0.25" velocity="0.15"></limit>
+    <dynamics damping="3.0" friction="1.0"></dynamics>
+  </joint>
+
+  <transmission name="arm_forearm_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_forearm_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_forearm_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Aluminum wrist plate -->
+  <link name="arm_wrist">
+    <inertial>
+      <mass value="0.3063" />
+      <inertia ixx="0.00039" ixy="0" ixz="0" iyy="0.00039" iyz="0" izz="0.00077" />
+    </inertial>
+    <collision name="arm_wrist_collision">
+      <origin rpy="0 1.5708 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.015" radius="0.05"></cylinder></geometry>
+    </collision>
+    <visual name="arm_wrist_visual">
+      <origin rpy="0 1.5708 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.015" radius="0.05"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <joint name="arm_wrist_joint" type="continuous">
+    <parent link="arm_forearm"></parent>
+    <child link="arm_wrist"></child>
+    <axis rpy="0 0 0" xyz="1 0 0"></axis>
+    <origin rpy="0 0 0" xyz="0.275 0 0"></origin>
+    <limit effort="100.0" velocity="0.1"></limit>
+    <dynamics damping="0.0" friction="0.5"></dynamics>
+  </joint>
+
+  <transmission name="arm_wrist_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_wrist_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_wrist_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Steel hands -->
+  <link name="arm_hand_left">
+    <inertial>
+      <mass value="0.4716" />
+      <inertia ixx="0.000072" ixy="0" ixz="0" iyy="0.000402" iyz="0" izz="0.000456" />
+    </inertial>
+    <collision name="arm_hand_left_collision">
+      <origin rpy="0 0 0" xyz="0.05 0 0"></origin> 
+      <geometry><box size="0.1 0.015 0.04" /></geometry>
+    </collision>
+    <visual name="arm_hand_left_visual">
+      <origin rpy="0 0 0" xyz="0.05 0 0"></origin> 
+      <geometry><box size="0.1 0.015 0.04" /></geometry>
+    </visual>
+  </link>
+
+  <link name="arm_hand_right">
+    <inertial>
+      <mass value="0.4716" />
+      <inertia ixx="0.000072" ixy="0" ixz="0" iyy="0.000402" iyz="0" izz="0.000456" />
+    </inertial>
+    <collision name="arm_hand_right_collision">
+      <origin rpy="0 0 0" xyz="0.05 0 0"></origin> 
+      <geometry><box size="0.1 0.015 0.04" /></geometry>
+    </collision>
+    <visual name="arm_hand_right_visual">
+      <origin rpy="0 0 0" xyz="0.05 0 0"></origin> 
+      <geometry><box size="0.1 0.015 0.04" /></geometry>
+    </visual>
+  </link>
+
+  <link name="arm_hand_top">
+    <inertial>
+      <mass value="0.4716" />
+      <inertia ixx="0.000456" ixy="0" ixz="0" iyy="0.000072" iyz="0" izz="0.000402" />
+    </inertial>
+    <collision name="arm_hand_top_collision">
+      <origin rpy="0 0 0" xyz="0 0 0.05"></origin> 
+      <geometry><box size="0.015 0.04 0.1" /></geometry>
+    </collision>
+    <visual name="arm_hand_top_visual">
+      <origin rpy="0 0 0" xyz="0 0 0.05"></origin> 
+      <geometry><box size="0.015 0.04 0.1" /></geometry>
+    </visual>
+  </link>
+
+  <joint name="arm_hand_left_joint" type="revolute">
+    <child link="arm_hand_left"></child>
+    <parent link="arm_wrist"></parent>
+    <axis rpy="0 0 0" xyz="0 0 1"></axis>
+    <origin rpy="0 0 0" xyz="0.015 0.05 0"></origin>
+    <limit effort="10000" lower="0.0" upper="0.7854" velocity="0.5"></limit>
+    <dynamics damping="0.1" friction="0.5"></dynamics>
+  </joint>
+
+  <joint name="arm_hand_right_joint" type="revolute">
+    <child link="arm_hand_right"></child>
+    <parent link="arm_wrist"></parent>
+    <axis rpy="0 0 0" xyz="0 0 1"></axis>
+    <origin rpy="0 0 0" xyz="0.015 -0.05 0"></origin> 
+    <limit effort="10000" lower="-0.7854" upper="0.0" velocity="0.5"></limit>
+    <dynamics damping="0.1" friction="0.5"></dynamics>
+  </joint>
+
+  <joint name="arm_hand_top_joint" type="fixed">
+    <origin rpy="0 0.5236 0" xyz="0 0 0.03"></origin>
+    <child link="arm_hand_top"></child>
+    <parent link="arm_wrist"></parent>
+  </joint>
+
+  <transmission name="arm_hand_left_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_hand_left_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_hand_left_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="arm_hand_right_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_hand_right_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_hand_right_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Tungsten fingers -->
+  <link name="arm_finger_left">
+    <inertial>
+      <mass value="0.2895" />
+      <inertia ixx="0.000024" ixy="0" ixz="0" iyy="0.000063" iyz="0" izz="0.000082" />
+    </inertial>
+    <collision name="arm_finger_left_collision">
+      <origin rpy="0 0 0" xyz="0.025 0 0"></origin> 
+      <geometry><box size="0.05 0.01 0.03" /></geometry>
+    </collision>
+    <visual name="arm_finger_left_visual">
+      <origin rpy="0 0 0" xyz="0.025 0 0"></origin> 
+      <geometry><box size="0.05 0.01 0.03" /></geometry>
+    </visual>
+  </link>
+
+  <link name="arm_finger_right">
+    <inertial>
+      <mass value="0.2895" />
+      <inertia ixx="0.000024" ixy="0" ixz="0" iyy="0.000063" iyz="0" izz="0.000082" /> 
+    </inertial>
+    <collision name="arm_finger_right_collision">
+      <origin rpy="0 0 0" xyz="0.025 0 0"></origin> 
+      <geometry><box size="0.05 0.01 0.03" /></geometry>
+    </collision>
+    <visual name="arm_finger_right_visual">
+      <origin rpy="0 0 0" xyz="0.025 0 0"></origin> 
+      <geometry><box size="0.05 0.01 0.03" /></geometry>
+    </visual>
+  </link>
+
+  <link name="arm_finger_top">
+    <inertial>
+      <mass value="0.2895" />
+      <inertia ixx="0.000024" ixy="0" ixz="0" iyy="0.000063" iyz="0" izz="0.000082" />
+    </inertial>
+    <collision name="arm_finger_top_collision">
+      <origin rpy="0 0 0" xyz="0.025 0 0"></origin> 
+      <geometry><box size="0.05 0.03 0.01" /></geometry>
+    </collision>
+    <visual name="arm_finger_top_visual">
+      <origin rpy="0 0 0" xyz="0.025 0 0"></origin> 
+      <geometry><box size="0.05 0.03 0.01" /></geometry>
+    </visual>
+  </link>
+
+  <joint name="arm_finger_left_joint" type="revolute">
+    <child link="arm_finger_left"></child>
+    <parent link="arm_hand_left"></parent>
+    <axis rpy="0 0 0" xyz="0 0 1"></axis>
+    <origin rpy="0 0 0" xyz="0.11 -0.0075 0"></origin>
+    <limit effort="10000" lower="-1.0472" upper="0.0" velocity="0.5"></limit>
+    <dynamics damping="0.1" friction="0.5"></dynamics>
+  </joint>
+
+  <joint name="arm_finger_right_joint" type="revolute">
+    <child link="arm_finger_right"></child>
+    <parent link="arm_hand_right"></parent>
+    <axis rpy="0 0 0" xyz="0 0 1"></axis>
+    <origin rpy="0 0 0" xyz="0.11 0.0075 0"></origin>
+    <limit effort="10000" lower="0.0" upper="1.0472" velocity="0.5"></limit>
+    <dynamics damping="0.1" friction="0.5"></dynamics>
+  </joint>
+
+  <joint name="arm_finger_top_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.065 0 0.115"></origin>
+    <child link="arm_finger_top"></child>
+    <parent link="arm_wrist"></parent>
+  </joint>
+
+  <transmission name="arm_finger_left_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_finger_left_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_finger_left_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="arm_finger_right_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="arm_finger_right_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="arm_finger_right_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+</robot>

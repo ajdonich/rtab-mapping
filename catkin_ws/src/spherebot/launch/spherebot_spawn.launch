@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+  <!--Include description and control launch files-->
+  <include file="$(find spherebot)/launch/robot_description.xml"/>
+  <include file="$(find spherebot)/launch/robot_control.xml"/>
+
+  <!--Launch a gazebo world-->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find spherebot)/worlds/room.world" />
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <!-- Generate Spherebot URDF from xacro description and spawn it in Gazebo -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" 
+        output="screen" args="-urdf -param robot_description -model spherebot 
+        -x 0 -y 0 -z 0.35 -R 0 -P 0 -Y 0"/>
+
+</launch>

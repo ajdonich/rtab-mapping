@@ -1,0 +1,45 @@
+// Command-line joint controller tests: rostopic pub <topic> std_msgs/Float64 '{data: <value>}'
+
+// Head and eye-socket/camera
+rostopic pub /isocket_position_controller/command std_msgs/Float64 '{data: 0.2618}'
+rostopic pub /head_position_controller/command std_msgs/Float64 '{data: 0.2618}'
+rostopic pub /isocket_position_controller/command std_msgs/Float64 '{data: 0.0}'
+rostopic pub /head_position_controller/command std_msgs/Float64 '{data: 0.0}'
+
+// Arm wheel and forearm
+rostopic pub /arm_wheel_position_controller/command std_msgs/Float64 '{data: 0.2618}'
+rostopic pub /arm_forearm_position_controller/command std_msgs/Float64 '{data: 0.2}'
+rostopic pub /arm_wheel_position_controller/command std_msgs/Float64 '{data: -0.3491}'
+rostopic pub /arm_forearm_position_controller/command std_msgs/Float64 '{data: 0.0}'
+rostopic pub /arm_wheel_position_controller/command std_msgs/Float64 '{data: 0.0}'
+
+// Arm wrist
+rostopic pub /arm_wrist_position_controller/command std_msgs/Float64 '{data: 3.1416}'
+rostopic pub /arm_wrist_position_controller/command std_msgs/Float64 '{data: 0.0}'
+
+// Arm hand (open)
+rostopic pub /arm_hand_left_position_controller/command std_msgs/Float64 '{data: 0.7854}'
+rostopic pub /arm_finger_left_position_controller/command std_msgs/Float64 '{data: -0.7854}'
+rostopic pub /arm_hand_right_position_controller/command std_msgs/Float64 '{data: -0.7854}'
+rostopic pub /arm_finger_right_position_controller/command std_msgs/Float64 '{data: 0.7854}'
+
+// (close)
+rostopic pub /arm_hand_left_position_controller/command std_msgs/Float64 '{data: 0.0}'
+rostopic pub /arm_finger_left_position_controller/command std_msgs/Float64 '{data: 0.0}'
+rostopic pub /arm_hand_right_position_controller/command std_msgs/Float64 '{data: 0.0}'
+rostopic pub /arm_finger_right_position_controller/command std_msgs/Float64 '{data: 0.0}'
+
+// (carry)
+rostopic pub /arm_hand_left_position_controller/command std_msgs/Float64 '{data: 0.5236}'
+rostopic pub /arm_hand_right_position_controller/command std_msgs/Float64 '{data: -0.5236}'
+rostopic pub /arm_finger_left_position_controller/command std_msgs/Float64 '{data: -0.6981}'
+rostopic pub /arm_finger_right_position_controller/command std_msgs/Float64 '{data: 0.6981}'
+
+rostopic pub /arm_hand_left_position_controller/command std_msgs/Float64 '{data: 0.6109}'
+rostopic pub /arm_hand_right_position_controller/command std_msgs/Float64 '{data: -0.6109}'
+rostopic pub /arm_finger_left_position_controller/command std_msgs/Float64 '{data: -0.7500}'
+rostopic pub /arm_finger_right_position_controller/command std_msgs/Float64 '{data: 0.7500}'
+
+
+// Ball
+.35,0,.47

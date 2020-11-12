@@ -1,0 +1,13 @@
+<launch>
+
+  <!-- The drive_bot node -->
+  <node name="drive_bot" type="drive_bot" pkg="ball_chaser" output="screen"/>
+
+  <!-- The image viewer/gui node -->
+  <node name="image_viewer" type="rqt_image_view" 
+        pkg="rqt_image_view" args="/camera/rgb/image_raw"/>
+
+  <!-- The spherebot_cns node -->
+  <node name="spherebot_cns" type="spherebot_cns" pkg="ball_chaser" output="screen"/>
+
+</launch>

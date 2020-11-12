@@ -1,0 +1,228 @@
+<?xml version='1.0'?>
+
+<robot name="spherebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find spherebot)/urdf/spherebot.gazebo" />
+  <xacro:include filename="$(find spherebot)/urdf/robotarm.xacro" />
+
+  <!-- Aluminium torso (URDF root link) -->
+  <link name="spherebot_torso">
+    <inertial>
+      <mass value="37.66057"></mass>
+      <inertia ixx="1.4503" ixy="0" ixz="0" iyy="1.4503" iyz="0" izz="1.4503" />
+    </inertial>
+    <collision name="spherebot_torso_collision">
+      <geometry><sphere radius="0.25"></sphere></geometry>
+    </collision>
+    <visual name="spherebot_torso_visual">
+      <geometry><sphere radius="0.25"></sphere></geometry>
+    </visual>
+  </link>
+
+  <!-- Aluminium head -->
+  <link name="spherebot_head">
+    <inertial>
+      <mass value="3.98605"></mass>
+      <inertia ixx="0.0330" ixy="0" ixz="0" iyy="0.0330" iyz="0" izz="0.0271" />
+    </inertial>
+    <collision name="spherebot_head_collision">
+      <geometry><cylinder length="0.1" radius="0.1"></cylinder></geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.31"></origin>
+    </collision>
+    <visual name="spherebot_head_visual">
+      <geometry><cylinder length="0.1" radius="0.1"></cylinder></geometry>
+      <origin rpy="0 0 0" xyz="0 0 0.31"></origin>
+    </visual>
+  </link>
+
+  <!-- Steel eye socket -->
+  <link name="spherebot_isocket">
+    <inertial>
+      <mass value="2.1071"></mass> 
+      <inertia ixx="0.00135" ixy="0" ixz="0" iyy="0.00135" iyz="0" izz="0.00135" />
+    </inertial>
+    <collision name="spherebot_isocket_collision">
+      <geometry><sphere radius="0.04"></sphere></geometry>
+    </collision>
+    <visual name="spherebot_isocket_visual">
+      <geometry><sphere radius="0.04"></sphere></geometry>
+    </visual>
+  </link>
+  
+  <joint name="spherebot_head_joint" type="revolute">
+    <child link="spherebot_head"></child>
+    <parent link="spherebot_torso"></parent>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000" lower="-0.27" upper="0.27" velocity="0.5"></limit>
+    <dynamics damping="3.0" friction="3.0"></dynamics>
+  </joint>
+
+  <joint name="spherebot_isocket_joint" type="revolute">
+    <parent link="spherebot_head"></parent>
+    <child link="spherebot_isocket"></child>
+    <origin rpy="0 0 0" xyz="0.08 0 0.31"></origin>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000" lower="-0.27" upper="0.27" velocity="0.5"></limit>
+    <dynamics damping="0.0" friction="0.1"></dynamics>
+  </joint>
+
+  <transmission name="spherebot_head_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="spherebot_head_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="spherebot_head_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="spherebot_isocket_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="spherebot_isocket_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="spherebot_isocket_motor">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <!-- Aluminum hubs and tire rubber -->
+  <link name="right_front_wheel">
+    <inertial>
+      <mass value="4.02124"></mass>
+      <inertia ixx="0.0194" ixy="0" ixz="0" iyy="0.0221" iyz="0" izz="0.0194" />
+    </inertial>
+    <collision name="right_front_wheel_collision">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </collision>
+    <visual name="right_front_wheel_visual">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <link name="left_front_wheel">
+    <inertial>
+      <mass value="4.02124"></mass>
+      <inertia ixx="0.0194" ixy="0" ixz="0" iyy="0.0221" iyz="0" izz="0.0194" />
+    </inertial>
+    <collision name="left_front_wheel_collision">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </collision>
+    <visual name="left_front_wheel_visual">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <link name="right_back_wheel">
+    <inertial>
+      <mass value="4.02124"></mass>
+      <inertia ixx="0.0194" ixy="0" ixz="0" iyy="0.0221" iyz="0" izz="0.0194" />
+    </inertial>
+    <collision name="right_back_wheel_collision">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </collision>
+    <visual name="right_back_wheel_visual">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <link name="left_back_wheel">
+    <inertial>
+      <mass value="4.02124"></mass>
+      <inertia ixx="0.0194" ixy="0" ixz="0" iyy="0.0221" iyz="0" izz="0.0194" />
+    </inertial>
+    <collision name="left_back_wheel_collision">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </collision>
+    <visual name="left_back_wheel_visual">
+      <origin rpy="1.5708 0 0" xyz="0 0 0"></origin> 
+      <geometry><cylinder length="0.05" radius="0.15"></cylinder></geometry>
+    </visual>
+  </link>
+
+  <joint name="right_front_wheel_joint" type="continuous">
+    <origin rpy="0 0 0" xyz="0.35 -0.35 -0.2"></origin>
+    <parent link="spherebot_torso"></parent>
+    <child link="right_front_wheel"></child>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000" velocity="1000"></limit>
+    <dynamics damping="1.0" friction="1.0"></dynamics>
+  </joint>
+
+  <joint name="left_front_wheel_joint" type="continuous">
+    <origin rpy="0 0 0" xyz="0.35 0.35 -0.2"></origin>
+    <parent link="spherebot_torso"></parent>
+    <child link="left_front_wheel"></child>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000" velocity="1000"></limit>
+    <dynamics damping="1.0" friction="1.0"></dynamics>
+  </joint>
+
+  <joint name="right_back_wheel_joint" type="continuous">
+    <origin rpy="0 0 0" xyz="-0.35 -0.35 -0.2"></origin>
+    <parent link="spherebot_torso"></parent>
+    <child link="right_back_wheel"></child>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000" velocity="1000"></limit>
+    <dynamics damping="1.0" friction="1.0"></dynamics>
+  </joint>
+
+  <joint name="left_back_wheel_joint" type="continuous">
+    <origin rpy="0 0 0" xyz="-0.35 0.35 -0.2"></origin>
+    <parent link="spherebot_torso"></parent>
+    <child link="left_back_wheel"></child>
+    <axis rpy="0 0 0" xyz="0 1 0"></axis>
+    <limit effort="10000" velocity="1000"></limit>
+    <dynamics damping="1.0" friction="1.0"></dynamics>
+  </joint>
+
+  <link name="camera">
+    <inertial>
+      <mass value="0.125"></mass>
+      <inertia ixx="0.000007813" ixy="0" ixz="0" iyy="0.000078500" iyz="0" izz="0.000078500" />
+    </inertial>
+    <collision name="camera_collision">
+      <geometry><cylinder length="0.081" radius="0.015"></cylinder></geometry>
+      <origin rpy="0 1.5708 0" xyz="0.0 0 0"></origin>
+    </collision>
+    <visual name="camera_visual">
+      <geometry><cylinder length="0.081" radius="0.015"></cylinder></geometry>
+      <origin rpy="0 1.5708 0" xyz="0.0 0 0"></origin>
+    </visual>
+  </link>
+
+  <link name="hokuyo_lidar">
+    <inertial>
+      <mass value="0.16" />
+      <inertia ixx="0.000266667" ixy="0" ixz="0" iyy="0.000266667" iyz="0" izz="0.000266667" />
+    </inertial>
+    <collision name="hokuyo_lidar_collision">
+      <geometry><box size="0.1 0.1 0.1" /></geometry>
+    </collision>
+    <visual name="hokuyo_lidar_visual">
+      <geometry><mesh filename="package://spherebot/meshes/hokuyo.dae"/></geometry>
+    </visual>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <!-- <origin rpy="0 0 0" xyz="0 0 0"></origin> -->
+    <parent link="spherebot_isocket"></parent>
+    <child link="camera"></child>
+  </joint>
+
+  <joint name="hokuyo_lidar_joint" type="fixed">
+    <origin rpy="0 3.1416 3.1416" xyz="0 0 -0.25"></origin>
+    <parent link="spherebot_torso"></parent>
+    <child link="hokuyo_lidar"></child>
+  </joint>
+
+</robot>
