@@ -16,7 +16,7 @@ $ cd catkin_ws
 $ catkin_make
 ```
 
-This build will generate two directories in *catkin_ws*: *build* and *devel*. To run/launch the simulation, you will need to start multiple terminal windows and, before executing ROS commands, source the ros/catkin setup file in each terminal. Note: execution instructions below expect this enviroment setup and will NOT reiterate this source command.
+This build will generate two directories in *catkin_ws*: *build* and *devel*. To run/launch the simulation, you will need to start multiple terminal windows and, before executing ROS commands, source the ros/catkin setup file in each terminal. Note: execution instructions below expect this environment setup and will NOT reiterate this source command.
 
 ```
 $ cd catkin_ws
@@ -39,7 +39,7 @@ ___
 
 ### Execution:
 
-To begin the simulation start a terminal window and launch the Spherebot Node. This command execution should take about 20sec to complete and finish with the Gazebo client GUI displaying the Spherebot within his world.
+To begin the simulation, start a terminal window and launch the Spherebot Node. This command execution should take about 20sec to complete and finish with the Gazebo client GUI displaying the Spherebot within his world.
 
 ```
 $ roslaunch spherebot spherebot_spawn.launch
@@ -48,13 +48,13 @@ $ roslaunch spherebot spherebot_spawn.launch
 ```
 $ gzclient
 ```
-Finally, in a second terminal, launch the Ball Chaser Node with the following. This will kick off the articulation of Spherebot through his simulation sequence, which takes about 7-8min to complete successfully using the default test scenario. Note, however, that it plays out somewhat non-deterministically depending on subtlies of the Gazebo physics simulation. 
+Finally, in a second terminal, launch the Ball Chaser Node with the following. This will kick off the articulation of Spherebot through his simulation sequence, which takes about 7-8min to complete successfully using the default test scenario. Note, however, that it plays out somewhat non-deterministically depending on subtleties of the Gazebo physics simulation. 
 
 ```
 $ roslaunch ball_chaser ball_chaser.launch
 ```
 
-This command also launches an RQT GUI displaying the images produced from Spherebot's camera (i.e. his POV). Additionally, a variety of robot state information is logged to the terminal, including camera and lidar values read from sensors, joint commands published, and acertained joint states.
+This command also launches an RQT GUI displaying the images produced from Spherebot's camera (i.e. his POV). Additionally, a variety of robot state information is logged to the terminal, including camera and lidar values read from sensors, joint commands published, and ascertained joint states.
 
  **Trouble Shooting:** (1) Ball pickup is the biggest challenge for Spherebot; sometimes he tosses the ball rather than pulling it in. In this case, it is likely most efficient to start over and try again from scratch because he is not currently programmed to handle (or even detect) this failure intelligently. Nevertheless, if you give him another shot, he will likely succeed (in final tests he went 8 for 10). (2) Occasionally the RQT GUI crashes on launch. This does not actually disrupt the simulation for the Spherebot, but will prevent you from seeing his POV. To correct this, you can simply start another terminal and launch the RQT GUI by hand with:
  ```
@@ -66,11 +66,11 @@ ___
 
 ### Implementation Notes:
 
-Spherebot's design specification can be found in ![spherebot.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.xacro), ![robotarm.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/robotarm.xacro), and ![spherebot.gazebo](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.gazebo). A best effort was made to generate realistic moments of inertia, which were calculated with the assumtion of real material densities (primarily alumininum and steel) and accurate volumes. Lighter weight material had to be abandoned due to major robot instability produced by small inertia values.  
+Spherebot's design specification can be found in [spherebot.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.xacro), [robotarm.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/robotarm.xacro), and [spherebot.gazebo](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.gazebo). A best effort was made to generate realistic moments of inertia, which were calculated with the assumption of real material densities (primarily aluminum  and steel) and accurate volumes. Lighter weight material had to be abandoned due to major robot instability produced by small inertia values.  
 
-Additional joint control configuration (particularly PID values) can be found in ![joint_controllers.yaml](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/config/joint_controllers.yaml). Another significant challenge was trying to tune joint controller parameters relative to moments of intertia to manage both robot stability and movement control of joints through delicate maneuvers such as ball pickup. Some of these included, friction and velocity parameters, effort limits and PID values.
+Additional joint control configuration (particularly PID values) can be found in [joint_controllers.yaml](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/config/joint_controllers.yaml). Another significant challenge was trying to tune joint controller parameters relative to moments of inertia to manage both robot stability and movement control of joints through delicate maneuvers such as ball pickup. Some of these parameters include friction, velocity, effort limits, PID, and kp/kd values.
 
-The majority of Spherebot's articulation logic can be found in ![spherebot_cns.cpp](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/ball_chaser/src/spherebot_cns.cpp). In general, this process runs two threads: one to receive incoming state information from camera, lidar, and joint state publishers, and a second thread to manage execution of a robot state machine and send out various articulation commands relative to that state. Adding this additional thread significantly improved Spherebot's ability to operate accurately and efficiently interleave efferent motor commands with afferent sensory feedback.
+The majority of Spherebot's articulation logic can be found in [spherebot_cns.cpp](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/ball_chaser/src/spherebot_cns.cpp). In general, this process runs two threads: one to receive incoming state information from camera, lidar, and joint state publishers, and a second thread to manage execution of a robot state machine and send out various articulation commands relative to that state. Adding this additional thread significantly improved Spherebot's ability to operate accurately and efficiently interleave efferent motor commands with afferent sensory feedback.
 
 
 
