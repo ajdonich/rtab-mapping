@@ -2,7 +2,7 @@
 
 This project implements a small robot: Spherebot, designed to run in a Gazebo simulator using the Robot Operating System (ROS). It is an extension of the Udacity nanodegree go-chase-it project. It employs a catkin package structure and incorporates several Gazebo plugins including a skid steer drive controller, ROS joint control, and both camera and lidar controllers. Spherebot is currently programmed to search his environment for a white ball, approach/pursue it until it is within close range, then attempt to pick up the ball using his robot arm. He then finds a box/bucket marked with a red circular sign, approaches it while carrying the ball, and finally drops the ball into the bucket.
 
-![Spherebot](https://github.com/ajdonich/spherebot/blob/master/spherebot.jpg)
+![Spherebot](https://github.com/ajdonich/spherebot/blob/main/spherebot.jpg)
 
 ___
 
@@ -66,11 +66,11 @@ ___
 
 ### Implementation Notes:
 
-Spherebot's design specification can be found in ![spherebot.xacro](https://github.com/ajdonich/spherebot/blob/master/catkin_ws/src/spherebot/urdf/spherebot.xacro), ![robotarm.xacro](https://github.com/ajdonich/spherebot/blob/master/catkin_ws/src/spherebot/urdf/robotarm.xacro), and ![spherebot.gazebo](https://github.com/ajdonich/spherebot/blob/master/catkin_ws/src/spherebot/urdf/spherebot.gazebo). A best effort was made to generate realistic moments of inertia, which were calculated with the assumtion of real material densities (primarily alumininum and steel) and accurate volumes. Lighter weight material had to be abandoned due to major robot instability produced by small inertia values.  
+Spherebot's design specification can be found in ![spherebot.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.xacro), ![robotarm.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/robotarm.xacro), and ![spherebot.gazebo](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.gazebo). A best effort was made to generate realistic moments of inertia, which were calculated with the assumtion of real material densities (primarily alumininum and steel) and accurate volumes. Lighter weight material had to be abandoned due to major robot instability produced by small inertia values.  
 
-Additional joint control configuration (particularly PID values) can be found in ![joint_controllers.yaml](https://github.com/ajdonich/spherebot/blob/master/catkin_ws/src/spherebot/config/joint_controllers.yaml). Another significant challenge was trying to tune joint controller parameters relative to moments of intertia to manage both robot stability and movement control of joints through delicate maneuvers such as ball pickup. Some of these included, friction and velocity parameters, effort limits and PID values.
+Additional joint control configuration (particularly PID values) can be found in ![joint_controllers.yaml](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/config/joint_controllers.yaml). Another significant challenge was trying to tune joint controller parameters relative to moments of intertia to manage both robot stability and movement control of joints through delicate maneuvers such as ball pickup. Some of these included, friction and velocity parameters, effort limits and PID values.
 
-The majority of Spherebot's articulation logic can be found in ![spherebot_cns.cpp](https://github.com/ajdonich/spherebot/blob/master/catkin_ws/src/ball_chaser/src/spherebot_cns.cpp). In general, this process runs two threads: one to receive incoming state information from camera, lidar, and joint state publishers, and a second thread to manage execution of a robot state machine and send out various articulation commands relative to that state. Adding this additional thread significantly improved Spherebot's ability to operate accurately and efficiently interleave efferent motor commands with afferent sensory feedback.
+The majority of Spherebot's articulation logic can be found in ![spherebot_cns.cpp](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/ball_chaser/src/spherebot_cns.cpp). In general, this process runs two threads: one to receive incoming state information from camera, lidar, and joint state publishers, and a second thread to manage execution of a robot state machine and send out various articulation commands relative to that state. Adding this additional thread significantly improved Spherebot's ability to operate accurately and efficiently interleave efferent motor commands with afferent sensory feedback.
 
 
 
