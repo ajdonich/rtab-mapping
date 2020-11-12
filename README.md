@@ -12,30 +12,28 @@ Note: the project requires both [ROS](http://wiki.ros.org/ROS/Installation) and 
 
 ```
 $ git clone https://github.com/ajdonich/spherebot.git
-$ cd catkin_ws
+$ cd spherebot/catkin_ws
 $ catkin_make
 ```
 
-This build will generate two directories in *catkin_ws*: *build* and *devel*. To run/launch the simulation, you will need to start multiple terminal windows and, before executing ROS commands, source the ros/catkin setup file in each terminal. Note: execution instructions below expect this environment setup and will NOT reiterate this source command.
-
+This build will generate two directories in *catkin_ws*: *build* and *devel*. Before executing ROS commands to launch the simulation from a terminal, you will need to source the ros/catkin setup file (in each terminal window you use, and you will need at least two):
 ```
-$ cd catkin_ws
 $ source devel/setup.bash
 ```
-Because this is required in every new terminal, you may prefer to automate this step by adding something like the following to a *.bash_profile* (or similar):
+**Note:** execution of commands described below from a terminal that does not have this environment sourced will likely produce cryptic errors, and because it is required in every new terminal, you may prefer to automate this step by adding something like the following to your *.bash_profile* (or similar):
 
 ``` bash
-ROS_SETUP=/home/workspace/catkin_ws/devel/setup.bash
+ROS_SETUP=/home/workspace/spherebot/catkin_ws/devel/setup.bash
 if test -f "$ROS_SETUP"; then
     echo "Catkin workspace found, sourcing setup file:"
     echo "${ROS_SETUP}"
-    cd /home/workspace/catkin_ws
+    cd /home/workspace/spherebot/catkin_ws
     source devel/setup.bash
     echo ""
 fi
 ```
-___
 
+___
 
 ### Execution:
 
@@ -63,7 +61,6 @@ $ rosrun rqt_image_view rqt_image_view
 
 ___  
   
-
 ### Implementation Notes:
 
 Spherebot's design specification can be found in [spherebot.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.xacro), [robotarm.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/robotarm.xacro), and [spherebot.gazebo](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.gazebo). A best effort was made to generate realistic moments of inertia, which were calculated with the assumption of real material densities (primarily aluminum  and steel) and accurate volumes. Lighter weight material had to be abandoned due to major robot instability produced by small inertia values.  
