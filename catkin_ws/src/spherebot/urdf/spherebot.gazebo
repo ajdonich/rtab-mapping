@@ -11,72 +11,6 @@
   <gazebo reference="spherebot_isocket"><material>Gazebo/Grey</material></gazebo>
   <gazebo reference="camera"><material>Gazebo/Black</material></gazebo>
   
-  <gazebo reference="arm_forearm"><material>Gazebo/Grey</material></gazebo>
-  <gazebo reference="arm_wrist"><material>Gazebo/Black</material></gazebo>
-  <gazebo reference="arm_hand_left"><material>Gazebo/Grey</material></gazebo>
-  <gazebo reference="arm_hand_right"><material>Gazebo/Grey</material></gazebo>
-  <gazebo reference="arm_hand_top"><material>Gazebo/Grey</material></gazebo>
-  <gazebo reference="arm_finger_left"><material>Gazebo/Orange</material></gazebo>
-  <gazebo reference="arm_finger_right"><material>Gazebo/Orange</material></gazebo>
-  <gazebo reference="arm_finger_top"><material>Gazebo/Orange</material></gazebo>
-
-  <!-- For "within-body" eye socket and camera articulation -->
-  <!-- <gazebo reference="spherebot_head"><self_collide>false</self_collide></gazebo>
-  <gazebo reference="spherebot_isocket"><self_collide>false</self_collide></gazebo>
-  <gazebo reference="camera"><self_collide>false</self_collide></gazebo> -->
-
-  <!-- Link friction parameters-->
-  <gazebo reference="spherebot_torso"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
-  <gazebo reference="spherebot_head"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
-  <gazebo reference="spherebot_isocket"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
-  <gazebo reference="arm_forearm"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
-  <gazebo reference="arm_wrist"><mu1>0.2</mu1><mu2>0.2</mu2></gazebo>
-  <gazebo reference="arm_hand_left"><mu1>100.0</mu1><mu2>100.0</mu2></gazebo>
-  <gazebo reference="arm_hand_right"><mu1>100.0</mu1><mu2>100.0</mu2></gazebo>
-  <gazebo reference="arm_hand_top"><mu1>100.0</mu1><mu2>100.0</mu2></gazebo>
-  <gazebo reference="arm_finger_top"><mu1>100.0</mu1><mu2>100.0</mu2></gazebo>
-
-  <!-- contact sensors -->
-  <gazebo reference="arm_finger_left">
-    <mu1 value="100.0" />
-    <mu2 value="100.0" />
-    <kp value="1000000" />
-    <kd value="1.0" />
-    <minDepth>0.003</minDepth>  
-    <maxVel>0</maxVel>
-
-    <!-- 
-    <sensor name="arm_finger_left_sensor" type="contact">
-      <always_on>true</always_on>
-      <contact><collision>arm_finger_left_collision_collision</collision></contact>
-      <plugin name="tactile_contact_bumper" filename="libgazebo_ros_bumper.so">
-        <bumperTopicName>/arm_finger_left_sensor/contact</bumperTopicName>
-        <frameName>arm_finger_left</frameName>
-      </plugin>
-    </sensor>
-    -->
-  </gazebo>
-
-  <gazebo reference="arm_finger_right">
-    <mu1 value="100.0" />
-    <mu2 value="100.0" />
-    <kp value="1000000" />
-    <kd value="1.0" />
-    <minDepth>0.003</minDepth>  
-    <maxVel>0</maxVel>
-
-    <!-- 
-    <sensor name="arm_finger_right_sensor" type="contact">
-      <always_on>true</always_on>
-      <contact><collision>arm_finger_right_collision_collision</collision></contact>
-      <plugin name="tactile_contact_bumper" filename="libgazebo_ros_bumper.so">
-        <bumperTopicName>/arm_finger_right_sensor/contact</bumperTopicName>
-        <frameName>arm_finger_right</frameName>
-      </plugin>
-    </sensor>
-    -->
-  </gazebo>
-
   <!-- drive controller -->
   <gazebo>
     <plugin name="skid_steer_drive_controller" filename="libgazebo_ros_skid_steer_drive.so">
@@ -106,18 +40,10 @@
       <odometrySource>world</odometrySource>
       
       <publishTf>1</publishTf>
-      <broadcastTF>false</broadcastTF>
+      <broadcastTF>true</broadcastTF>
       <publishOdomTF>true</publishOdomTF>
-      <publishWheelTF>false</publishWheelTF>
-      <publishWheelJointState>false</publishWheelJointState>
-    </plugin>
-  </gazebo>
-
-  <!-- joint position controls -->
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <!-- <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> -->
-      <legacyModeNS>true</legacyModeNS>
+      <publishWheelTF>true</publishWheelTF>
+      <publishWheelJointState>true</publishWheelJointState>
     </plugin>
   </gazebo>
 
@@ -162,15 +88,15 @@
       <ray>
         <scan>
           <horizontal>
-            <samples>32</samples>
+            <samples>720</samples>
             <resolution>1</resolution>
-            <min_angle>-0.1397</min_angle>
-            <max_angle>0.1397</max_angle>
+            <min_angle>-1.57</min_angle>
+            <max_angle>1.57</max_angle>
           </horizontal>
         </scan>
         <range>
           <min>0.10</min>
-          <max>5.0</max>
+          <max>20.0</max>
           <resolution>0.01</resolution>
         </range>
         <noise>
@@ -185,7 +111,7 @@
       </ray>
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
         <topicName>/hokuyo/laser_scan</topicName>
-        <frameName>hokuyo</frameName>
+        <frameName>hokuyo_lidar</frameName>
       </plugin>
     </sensor>
   </gazebo>

@@ -3,7 +3,6 @@
 <robot name="spherebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:include filename="$(find spherebot)/urdf/spherebot.gazebo" />
-  <xacro:include filename="$(find spherebot)/urdf/robotarm.xacro" />
 
   <!-- Aluminium torso (URDF root link) -->
   <link name="spherebot_torso">
@@ -49,46 +48,18 @@
     </visual>
   </link>
   
-  <joint name="spherebot_head_joint" type="revolute">
+  <joint name="spherebot_head_joint" type="fixed">
     <child link="spherebot_head"></child>
     <parent link="spherebot_torso"></parent>
-    <axis rpy="0 0 0" xyz="0 1 0"></axis>
-    <limit effort="10000" lower="-0.27" upper="0.27" velocity="0.5"></limit>
-    <dynamics damping="3.0" friction="3.0"></dynamics>
   </joint>
 
-  <joint name="spherebot_isocket_joint" type="revolute">
+  <joint name="spherebot_isocket_joint" type="fixed">
     <parent link="spherebot_head"></parent>
     <child link="spherebot_isocket"></child>
     <origin rpy="0 0 0" xyz="0.08 0 0.31"></origin>
-    <axis rpy="0 0 0" xyz="0 1 0"></axis>
-    <limit effort="10000" lower="-0.27" upper="0.27" velocity="0.5"></limit>
-    <dynamics damping="0.0" friction="0.1"></dynamics>
   </joint>
 
-  <transmission name="spherebot_head_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="spherebot_head_joint">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="spherebot_head_motor">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-  <transmission name="spherebot_isocket_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="spherebot_isocket_joint">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="spherebot_isocket_motor">
-      <hardwareInterface>EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-
-  <!-- Aluminum hubs and tire rubber -->
+  <!-- Aluminum wheels -->
   <link name="right_front_wheel">
     <inertial>
       <mass value="4.02124"></mass>
@@ -214,15 +185,14 @@
   </link>
 
   <joint name="camera_joint" type="fixed">
-    <!-- <origin rpy="0 0 0" xyz="0 0 0"></origin> -->
     <parent link="spherebot_isocket"></parent>
     <child link="camera"></child>
   </joint>
 
   <joint name="hokuyo_lidar_joint" type="fixed">
-    <origin rpy="0 3.1416 3.1416" xyz="0 0 -0.25"></origin>
-    <parent link="spherebot_torso"></parent>
+    <parent link="spherebot_head"></parent>
     <child link="hokuyo_lidar"></child>
+    <origin rpy="0 0 0" xyz="0 0 0.385"></origin>
   </joint>
 
 </robot>

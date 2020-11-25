@@ -1,0 +1,45 @@
+<launch>
+
+    <!-- Map Server -->
+    <arg name="map_file" default="$(find spherebot)/maps/localize_map.yaml" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+    <!-- Visualization -->
+    <arg name="display_config" default="$(find spherebot)/config/localization.rviz" />
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg display_config)" />
+    <node name="image_viewer" type="rqt_image_view" 
+          pkg="rqt_image_view" args="/camera/rgb/image_raw"/>
+
+    <!-- AMCL Node -->
+    <node name="amcl" pkg="amcl" type="amcl" output="screen">
+        <remap from="scan" to="hokuyo/laser_scan"/>
+        <param name="odom_frame_id" value="odom"/>
+        <param name="odom_model_type" value="omni-corrected"/>
+        <param name="base_frame_id" value="spherebot_torso"/>
+        <param name="global_frame_id" value="map"/>
+
+        <param name="max_particles" value="1000"/>
+
+        <!-- Spherebot initial pose -->
+        <param name="initial_pose_x" value="0"/>
+        <param name="initial_pose_y" value="0"/>
+        <param name="initial_pose_a" value="-1.58"/>
+    </node>
+
+    <!-- Move Base -->
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+        <remap from="scan" to="hokuyo/laser_scan"/>
+        <param name="base_global_planner" value="navfn/NavfnROS" />
+        <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+        
+        <param name="planner_frequency" value="10.0"/>
+        <param name="controller_frequency" value="15.0"/>
+
+        <rosparam file="$(find spherebot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find spherebot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find spherebot)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find spherebot)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find spherebot)/config/base_local_planner_params.yaml" command="load" />
+    </node>
+
+</launch>

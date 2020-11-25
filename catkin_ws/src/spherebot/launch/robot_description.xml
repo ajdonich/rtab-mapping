@@ -4,14 +4,12 @@
   <param name="robot_description" command="$(find xacro)/xacro 
               --inorder '$(find spherebot)/urdf/spherebot.xacro'"/>
 
-  <!--GUI used to send fake joint values-->
+  <!--Publish joint state messges on /joint_states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
     <param name="use_gui" value="false"/>
   </node>
 
-  <!--Publish robot joint state to TF -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-    <remap from="/joint_states" to="/spherebot/joint_states" />
-  </node>
+  <!--Publish robot frame transforms to TF -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
 </launch>

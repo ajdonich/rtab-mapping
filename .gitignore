@@ -4,9 +4,11 @@
 # Mac desktop services store
 .DS_Store/
 
-# Catkin build dirs
+# Catkin build, etc
 catkin_ws/build
 catkin_ws/devel
+catkin_ws/src/pgm_map_creator
+catkin_ws/.catkin_workspace
 
 # Prerequisites
 *.d
