@@ -1,8 +1,8 @@
-## Project: SphereBot 
+## Project: Adaptive Monte Carlo Localization 
 
-This project implements a small robot: Spherebot, designed to run in a Gazebo simulator using the Robot Operating System (ROS). It is an extension of the Udacity nanodegree go-chase-it project. It employs a catkin package structure and incorporates several Gazebo plugins including a skid steer drive controller, ROS joint control, and both camera and lidar controllers. Spherebot is currently programmed to search his environment for a white ball, approach/pursue it until it is within close range, then attempt to pick up the ball using his robot arm. He then finds a box/bucket marked with a red circular sign, approaches it while carrying the ball, and finally drops the ball into the bucket.
+This project applies the ROS [AMCL](http://wiki.ros.org/amcl) package to a stripped down version of [Spherebot](https://github.com/ajdonich/spherebot) to perform robot localization in a similated Gazebo world. It does not contain any custom coded nodes, but rather employs a number of existing ROS packages to enable basic visualization and testing, in particular [RViz](http://wiki.ros.org/rviz) is used to visualize Spherebot, an AMCL particle cloud, and a 2D environment map, and it facilitates navigation commands to be issued through the [move_base](http://wiki.ros.org/move_base) package.
 
-![Spherebot](https://github.com/ajdonich/spherebot/blob/main/spherebot.jpg)
+![localization](https://github.com/ajdonich/amc-localization/blob/main/localization.jpg)
 
 ___
 
@@ -11,8 +11,8 @@ ___
 Note: the project requires both [ROS](http://wiki.ros.org/ROS/Installation) and [Gazebo](http://gazebosim.org/) to be appropriately installed (including PATH access to respective binaries) on the client machine. The project was developed on a Ubuntu system with Gazebo v7.16.0 and a ROS Kinetic Kame distro (neither of which are the most recent, but they're what Udacity currently provides). To install and build:
 
 ```
-$ git clone https://github.com/ajdonich/spherebot.git
-$ cd spherebot/catkin_ws
+$ git clone https://github.com/ajdonich/amc-localization.git
+$ cd amc-localization/catkin_ws
 $ catkin_make
 ```
 
@@ -20,14 +20,14 @@ This build will generate two directories in *catkin_ws*: *build* and *devel*. Be
 ```
 $ source devel/setup.bash
 ```
-**Note:** execution of commands described below from a terminal that does not have this environment sourced will likely produce cryptic errors, and because it is required in every new terminal, you may prefer to automate this step by adding something like the following to your *.bash_profile* (or similar):
+**Note:** execution of commands described below from a terminal that does not have this environment sourced will likely produce cryptic errors, and because ROS setup is required in every new terminal, you may prefer to automate this step by adding something like the following to your *.bash_profile* (or similar):
 
 ``` bash
-ROS_SETUP=/home/workspace/spherebot/catkin_ws/devel/setup.bash
+ROS_SETUP=/home/workspace/amc-localization/catkin_ws/devel/setup.bash
 if test -f "$ROS_SETUP"; then
     echo "Catkin workspace found, sourcing setup file:"
     echo "${ROS_SETUP}"
-    cd /home/workspace/spherebot/catkin_ws
+    cd /home/workspace/amc-localization/catkin_ws
     source devel/setup.bash
     echo ""
 fi
@@ -37,37 +37,37 @@ ___
 
 ### Execution:
 
-To begin the simulation, start a terminal window and launch the Spherebot Node. This command execution should take about 20sec to complete and finish with the Gazebo client GUI displaying the Spherebot within his world.
+To run the simulation, start two terminal windows and execute the following two commands in them respectively. The first launches Gazebo, ROS Core and Spherebot and should complete with the Gazebo client GUI displaying Spherebot within his world. The second launches the Map Server, AMCL, Move Base, RViz and RQT Nodes and should complete with the RViz client GUI displaying Spherebot surrounded by a particle cloud on the environment map. 
 
 ```
 $ roslaunch spherebot spherebot_spawn.launch
 ```
- **Trouble Shooting:** Occasionally the Gazebo client GUI crashes on launch (I suspect it may relate to insufficient memory as several launching joint controllers compete with the GUI for memory on start-up), you will simply need to start another terminal and launch the Gazebo GUI by hand with:
 ```
-$ gzclient
-```
-Finally, in a second terminal, launch the Ball Chaser Node with the following. This will kick off the articulation of Spherebot through his simulation sequence, which takes about 7-8min to complete successfully using the default test scenario. Note, however, that it plays out somewhat non-deterministically depending on subtleties of the Gazebo physics simulation. 
-
-```
-$ roslaunch ball_chaser ball_chaser.launch
+$ roslaunch spherebot amcl.launch
 ```
 
-This command also launches an RQT GUI displaying the images produced from Spherebot's camera (i.e. his POV). Additionally, a variety of robot state information is logged to the terminal, including camera and lidar values read from sensors, joint commands published, and ascertained joint states.
+Next, in the RViz GUI select the **2D Nav Goal** button in the top menu bar, then click anywhere within the map to place a navigation goal marker. Spherebot should respond by driving to the marker, approximately in alignment with a green trajectory path displayed in RViz. The localization particle cloud should condense more tightly around Spherebot when he is in motion. Feel free to repeat this marker placement as you like (you must reselect the **2D Nav Goal** button each time).  
 
- **Trouble Shooting:** (1) Ball pickup is the biggest challenge for Spherebot; sometimes he tosses the ball rather than pulling it in. In this case, it is likely most efficient to start over and try again from scratch because he is not currently programmed to handle (or even detect) this failure intelligently. Nevertheless, if you give him another shot, he will likely succeed (in final tests he went 8 for 10). (2) Occasionally the RQT GUI crashes on launch. This does not actually disrupt the simulation for the Spherebot, but will prevent you from seeing his POV. To correct this, you can simply start another terminal and launch the RQT GUI by hand with:
- ```
-$ rosrun rqt_image_view rqt_image_view
-```  
+Finally, you are free to explore a variety of parameter tuning. Though I circled around to using mostly AMCL defaults, the [RQT Rconfigure](http://wiki.ros.org/rqt_reconfigure) tool was very helpful to tune configurations at runtime, which you can run with simply:
+```
+$ rosrun rqt_reconfigure rqt_reconfigure
+```
+
+ **Trouble Shooting:** Collisions are easy to induce that either displace obstacles from their originally mapped locations, or topple Spherebot entirely. Generally, restarting the whole simulation is the only way to fully recover (but see (3) below). A few specific scenarios:
+
+ 1. Though the global path planning seems reasonably intelligent about discerning a global trajectory, the exection of drive commands coming from Move Base cannot always direct Spherebot with high precision through sharp turns, and object/wall collisions may result. I believe this is due, at least in part, to lack of precise responsiveness from the [Skid Steer Drive Controller](http://wiki.ros.org/steer_drive_controller) to simultaneous linear and angular velecity commands.
+ 
+ 2. For tricky marker placements (e.g. hidden around corners), despite the display of global path trajectories that might work, the drive commands divert Spherebot from that smarter global trajectory toward a more direct route to the marker (that is typically blocked by a wall and results in collision). 
+ 
+ 3. You can use the RViz **2D Pose Estimate** button, then click anywhere on the map, which will move/replace Spherebot in Rviz, to confuse (or explore the limits of) the localization algorithm, and AMCL can recover and recalibrate the actual robot position relative to the map if the Pose Estimate is not too divergent. However, if you significantly diverge the estimate from the actual, the particle cloud tends to go crazy and localization is totally lost.  
+
 
 ___  
   
 ### Implementation Notes:
 
-Spherebot's design specification can be found in [spherebot.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.xacro), [robotarm.xacro](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/robotarm.xacro), and [spherebot.gazebo](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/urdf/spherebot.gazebo). A best effort was made to generate realistic moments of inertia, which were calculated with the assumption of real material densities (primarily aluminum  and steel) and accurate volumes. Lighter weight material had to be abandoned due to major robot instability produced by small inertia values.  
+Spherebot's stripped down design specification can be found in [spherebot.xacro](https://github.com/ajdonich/amc-localization/blob/main/catkin_ws/src/spherebot/urdf/spherebot.xacro) and [spherebot.gazebo](https://github.com/ajdonich/amc-localization/blob/main/catkin_ws/src/spherebot/urdf/spherebot.gazebo). For his more complete implementation, see the [Spherebot](https://github.com/ajdonich/spherebot) repo. The [localize_map.pgm](https://github.com/ajdonich/amc-localization/blob/main/catkin_ws/src/spherebot/maps/localize_map.pgm) environement map was generated directly from the Gazebo [localize_room.world](https://github.com/ajdonich/amc-localization/blob/main/catkin_ws/src/spherebot/worlds/localize_room.world) file using the [pgm_map_creator](https://github.com/udacity/pgm_map_creator) plugin (not included in this repo).
 
-Additional joint control configuration (particularly PID values) can be found in [joint_controllers.yaml](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/spherebot/config/joint_controllers.yaml). Another significant challenge was trying to tune joint controller parameters relative to moments of inertia to manage both robot stability and movement control of joints through delicate maneuvers such as ball pickup. Some of these parameters include friction, velocity, effort limits, PID, and kp/kd values.
-
-The majority of Spherebot's articulation logic can be found in [spherebot_cns.cpp](https://github.com/ajdonich/spherebot/blob/main/catkin_ws/src/ball_chaser/src/spherebot_cns.cpp). In general, this process runs two threads: one to receive incoming state information from camera, lidar, and joint state publishers, and a second thread to manage execution of a robot state machine and send out various articulation commands relative to that state. Adding this additional thread significantly improved Spherebot's ability to operate accurately and efficiently interleave efferent motor commands with afferent sensory feedback.
 
 
 
