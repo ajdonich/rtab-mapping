@@ -48,7 +48,7 @@ $ roslaunch spherebot amcl.launch
 
 Next, in the RViz GUI select the **2D Nav Goal** button in the top menu bar, then click anywhere within the map to place a navigation goal marker. Spherebot should respond by driving to the marker, approximately in alignment with a green trajectory path displayed in RViz. The localization particle cloud should condense more tightly around Spherebot when he is in motion. Feel free to repeat this marker placement as you like (you must reselect the **2D Nav Goal** button each time).  
 
-Finally, you are free to explore a variety of parameter tuning. Though I circled around to using mostly AMCL defaults, the [RQT Reconfigure](http://wiki.ros.org/rqt_reconfigure) tool was very helpful to tune configurations at runtime, which you can run with simply:
+Finally, you are free to explore a variety of parameter tuning. I tuned a number of overall filter, odom and laser params in [amcl.launch](https://github.com/ajdonich/amc-localization/blob/main/catkin_ws/src/spherebot/launch/amcl.launch). Decreasing **odom_alpha\*** noise values (in accord with recieving noise-free odometry directly from Gazebo in this case) seemed to significantly improve localization. The [RQT Reconfigure](http://wiki.ros.org/rqt_reconfigure) tool can be helpful to tune params at runtime, which you can run with:
 ```
 $ rosrun rqt_reconfigure rqt_reconfigure
 ```
