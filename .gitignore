@@ -7,7 +7,8 @@
 # Catkin build, etc
 catkin_ws/build
 catkin_ws/devel
-catkin_ws/src/pgm_map_creator
+catkin_ws/src/teleop_twist_keyboard
+catkin_ws/src/spherebot/maps/rtabmap.db
 catkin_ws/.catkin_workspace
 
 # Prerequisites
