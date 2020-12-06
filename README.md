@@ -13,7 +13,9 @@ Note: the project requires both [ROS](http://wiki.ros.org/ROS/Installation) and 
 
 ```
 $ git clone https://github.com/ajdonich/rtab-mapping.git
-$ cd rtab-mapping/catkin_ws
+$ cd rtab-mapping/catkin_ws/src
+$ git clone https://github.com/ros-teleop/teleop_twist_keyboard
+$ cd ..
 $ catkin_make
 ```
 
